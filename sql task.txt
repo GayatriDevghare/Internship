@@ -1,0 +1,90 @@
+create database Internship;
+use Internship;
+
+create table Employee(EmpID int primary key,
+    EmpName varchar(50),
+    Department varchar(30),
+    Salary decimal(10,2),
+    HireDate date
+);
+
+insert into Employee values (101,'Amit','IT',60000,'2024-01-15'),
+(102,'Pari','HR',45000,'2023-09-10'),
+(103,'Rahul','Finance',70000,'2022-05-12'),
+(104,'Sneha','IT',80000,'2024-03-20'),
+(105,'Vaishnavi','Marketing',55000,'2023-11-18'),
+(106,'Pooja','HR',50000,'2025-01-10'),
+(107,'Rohan','Finance',75000,'2024-07-22'),
+(108,'Neha','IT',90000,'2022-08-05'),
+(109,'Karina','Marketing',60000,'2025-02-15'),
+(110,'Anjali','HR',48000,'2023-06-30'),
+(111,'Manoj','Finance',85000,'2024-04-11'),
+(112,'Kavita','IT',65000,'2025-03-01'),
+(113,'Deepak','Marketing',52000,'2022-12-25'),
+(114,'Maithili','HR',55000,'2024-09-09'),
+(115,'Arjun','Finance',95000,'2025-04-12'),
+(116,'Nisha','IT',72000,'2023-10-14'),
+(117,'Suresh','Marketing',62000,'2024-11-20'),
+(118,'Rutuja','HR',53000,'2025-05-05'),
+(119,'Akash','Finance',78000,'2023-07-17'),
+(120,'Komal','IT',88000,'2025-06-01'),
+(121,'Pari','HR',45000,'2023-09-10'),
+(122,'Maithili','HR',55000,'2024-09-09'),
+(123,'Anjali','HR',48000,'2023-06-30');
+
+create table Department (
+    DeptID int primary key,
+    DepartmentName varchar(50),
+    Location varchar(50)
+);
+
+insert into Department values 
+(1, 'IT', 'Pune'),
+(2, 'HR', 'Mumbai'),
+(3, 'Finance', 'Delhi'),
+(4, 'Marketing', 'Bangalore'),
+(5, 'Sales', 'Hyderabad'),
+(6, 'Admin', 'Chennai'),
+(7, 'Operations', 'Kolkata'),
+(8, 'Support', 'Nagpur'),
+(9, 'Research', 'Ahmedabad'),
+(10, 'Training', 'Jaipur');
+
+show tables;
+select * from Employee;
+select * from Department;
+
+
+-- write quri to show top 5 highest salary employees
+select* from Employee order by Salary desc limit 5 ;
+
+-- write quri department vise employee count
+select department , count(*) as EmpCount from Employee group by department;
+
+-- find second highest salary
+select max(Salary) as second_highest_salary from Employee where Salary < (select max(Salary) from Employee);
+
+-- Employees Whose Salary is Greater Than Department Average Salary
+select * from Employee e where Salary > (select avg(Salary) from Employee where Department =e.Department);
+
+-- inner join
+select e.EmpID, e.EmpName, e.Department ,d.DeptID from Employee e inner join Department d on e.Department = d.DeptID;
+
+-- left join
+select e.EmpID, e.EmpName, e.Department , d.DeptID from Employee e left join Department d on e.Department= d.DeptID;
+
+-- group by with having
+select Department, count(*) as EmpCount from Employee group by department  having Count(*) > 3;
+
+-- Employees Hired in Last 6 Months
+select * from Employee where  HireDate>= date_sub(curdate(), interval 6 month);
+
+-- find duplicate
+select EmpName, Department,  count(*) as DuplicateCount from Employee group by EmpName, Department having count(*)>1;
+
+SET SQL_SAFE_UPDATES = 0;
+-- Remove duplicate record 
+ delete e1 from Employee e1 join Employee e2 on e1.EmpName = e2.EmpName and e1.Department = e2.Department
+and e1.Salary = e2.Salary and e1.HireDate = e2.HireDate and e1.EmpID > e2.EmpID;
+
+select * from Employee;
